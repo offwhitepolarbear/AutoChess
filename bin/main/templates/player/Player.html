@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="/app/player/Player.css">
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Player 검색 창
+서버 
+<select id='region'>
+<option value='kr'>한국</option>
+<option value='cn'>중국</option>
+<option value='na'>북미</option>
+<option value='eu'>유럽</option>
+<option value='la'>남미</option>
+<option value='jp'>일본</option>
+</select> 
+
+<input id='summoner_name' type="text" placeholder="검색할 유저명을 입력해주세요" onkeypress="javascript:press_enter_on_user_name()">
+<button id='search' onclick="javascript:search_summoner()" >검색</button>
+</body>
+<script type="text/javascript" src='/app/player/Player.js'></script>
+</html>
