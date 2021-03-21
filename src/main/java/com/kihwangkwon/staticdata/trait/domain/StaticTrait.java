@@ -1,11 +1,12 @@
-package com.kihwangkwon.riotapi.domainstatic;
+package com.kihwangkwon.staticdata.trait.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -13,18 +14,19 @@ import lombok.Setter;
 @Setter
 public class StaticTrait {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String key;
+	private String traitKey;
 	//시너지 명
-	private String name;
 
+	private String name;
+	
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	// 직업,계열 구분
-	private String type;
-	
+	private String traitType;
 	private String imageFileName;
 	
 	//각 시너지 등급별 필요 최소 기물 수

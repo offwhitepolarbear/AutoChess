@@ -1,6 +1,6 @@
-package com.kihwangkwon.player.service;
+package com.kihwangkwon.businesslogic.player.service;
 
-import com.kihwangkwon.domain.db.Player;
+import com.kihwangkwon.businesslogic.player.domain.Player;
 import com.kihwangkwon.riotapi.domain.RegionNation;
 
 public interface PlayerService {

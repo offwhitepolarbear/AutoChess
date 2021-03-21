@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kihwangkwon.champion.service.ChampionService;
+import com.kihwangkwon.businesslogic.champion.service.ChampionService;
 
 @SpringBootTest
 class AutoChessApplicationTests {
@@ -14,7 +14,7 @@ class AutoChessApplicationTests {
 	void contextLoads() {
 		System.out.println("테스트");
 		//championServiceImpl.addChampion();
-		championServiceImpl.addChampion(champion);
+		//championServiceImpl.addChampion(champion);
 		System.out.println("테스트2");
 	}
 

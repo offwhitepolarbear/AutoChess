@@ -1,13 +1,18 @@
 package com.kihwangkwon.riotapi.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class ApiMatchUnit {
-	//dbpk
-	private long id;
+public class ApiMatchChampion {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	//매치아이디
 	private String matchId;
@@ -26,6 +31,8 @@ public class ApiMatchUnit {
 	//다 비어있는데 무슨 데이터인지? api에서 리턴 하니까 일단 놔둠
 	private String name;
 	
+	// 선받자 있는 경우에만 뜸
+	private String chosen;
 	
 	// 1~5코
 	private String rarity;

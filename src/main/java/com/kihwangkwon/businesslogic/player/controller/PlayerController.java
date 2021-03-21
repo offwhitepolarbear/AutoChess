@@ -1,4 +1,4 @@
-package com.kihwangkwon.player.controller;
+package com.kihwangkwon.businesslogic.player.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

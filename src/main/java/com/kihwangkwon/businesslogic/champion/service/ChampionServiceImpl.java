@@ -1,4 +1,4 @@
-package com.kihwangkwon.champion.service;
+package com.kihwangkwon.businesslogic.champion.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;

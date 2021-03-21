@@ -1,4 +1,4 @@
-package com.kihwangkwon.champion.controller;
+package com.kihwangkwon.businesslogic.champion.contoller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

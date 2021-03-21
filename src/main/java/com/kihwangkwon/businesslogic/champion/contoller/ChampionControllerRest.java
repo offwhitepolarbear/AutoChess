@@ -1,4 +1,4 @@
-package com.kihwangkwon.champion.controller;
+package com.kihwangkwon.businesslogic.champion.contoller;
 
 import java.util.ArrayList;
 import java.util.List;

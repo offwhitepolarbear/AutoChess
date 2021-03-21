@@ -1,11 +1,11 @@
-package com.kihwangkwon.player.controller;
+package com.kihwangkwon.businesslogic.player.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kihwangkwon.player.service.PlayerService;
+import com.kihwangkwon.businesslogic.player.service.PlayerService;
 import com.kihwangkwon.riotapi.domain.RegionNation;
 
 @RestController
