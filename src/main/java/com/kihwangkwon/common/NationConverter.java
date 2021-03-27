@@ -1,8 +1,11 @@
 package com.kihwangkwon.common;
 
+import org.springframework.stereotype.Service;
+
 import com.kihwangkwon.riotapi.domain.RegionContinent;
 import com.kihwangkwon.riotapi.domain.RegionNation;
 
+@Service
 public class NationConverter {
 	
 	//The AMERICAS routing value serves NA, BR, LAN, LAS, and OCE. 

@@ -15,4 +15,9 @@ public class MatchController {
 	public MatchController(MatchService matchService) {
 		this.matchService = matchService;
 	}
+
+	@RequestMapping("/")
+	public String matchMain() {
+		return "/match/Match.html";
+	}
 }

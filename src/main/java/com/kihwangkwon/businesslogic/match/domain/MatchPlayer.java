@@ -1,20 +1,33 @@
 package com.kihwangkwon.businesslogic.match.domain;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class MatchPlayer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private Long matchInfoId;
 	
 	private String matchId;
 	private String puuid;
@@ -33,12 +46,42 @@ public class MatchPlayer {
 	private String contentId;
 	private String skinId;
 	private String species;
+	
+	@Builder
+	public MatchPlayer(String puuid, int goldLeft, int lastRound, int level, int placement
+			, int damegeToPlayers, int playersEliminated, double timeEliminated
+			, String contentId, String skinId, String species) {
+		this.puuid = puuid;
+		this.goldLeft = goldLeft; 
+		this.lastRound=lastRound;
+		this. level=level;
+		this. placement=placement;
+		this. damegeToPlayers=damegeToPlayers;
+		this. playersEliminated=playersEliminated;
+		this. timeEliminated=timeEliminated;
+		this. contentId=contentId;
+		this. skinId=skinId;
+		this. species=species;
+	}
+	
 	/*
-	 "companion": {
-        "content_ID": "89222483-2823-410c-8a05-d2044e7c9a76",
-        "skin_ID": 3,
-        "species": "PetFairy"
-    },
+	@ManyToOne
+	@JoinColumn(name="match_info_match_id",referencedColumnName = "match_id")
+	private Match match;
 	*/
 	
+	@OneToMany
+	@Cascade(CascadeType.ALL)
+	@JoinColumns({
+		
+		@JoinColumn(name="matchPlayerId", referencedColumnName = "id"),	
+	})
+	List<MatchPlayerChampion> matchPlayerChampionList; 
+	
+	@OneToMany
+	@Cascade(CascadeType.ALL)
+	@JoinColumns({
+		@JoinColumn(name = "matchPlayerId", referencedColumnName = "id")
+	})
+	List<MatchPlayerTrait> matchPlayerTraitList; 
 }

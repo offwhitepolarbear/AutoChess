@@ -16,7 +16,7 @@ public class PlayerServiceImpl implements PlayerService {
 	
 	@Override
 	public Player getPlayerByName(RegionNation region, String playerName) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

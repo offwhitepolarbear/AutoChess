@@ -2,10 +2,15 @@ package com.kihwangkwon.riotapi.request;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.stereotype.Service;
 
+import com.kihwangkwon.businesslogic.match.domain.Match;
+import com.kihwangkwon.common.GetDataFromExternalApi;
 import com.kihwangkwon.properties.ConstructorProperties;
 import com.kihwangkwon.riotapi.domain.RegionContinent;
+import com.kihwangkwon.riotapi.domain.RegionNation;
 
+@Service
 @EnableConfigurationProperties(value = { ConstructorProperties.class })
 public class RiotApiRequester {
 	// 소환사 기본정보
@@ -13,22 +18,29 @@ public class RiotApiRequester {
 	// 가져온 경기 아이디 들 어떻게 처리할건지 ㅈ처리해야되고
 	private ConstructorProperties constructorProperties;
 	
+	private ApiRequestURLMaker apiRequestURLMaker;
+	
 	@Autowired
-	RiotApiRequester(ConstructorProperties constructorProperties){
+	RiotApiRequester(ConstructorProperties constructorProperties, ApiRequestURLMaker apiRequestURLMaker){
 		this.constructorProperties = constructorProperties;
+		this.apiRequestURLMaker = apiRequestURLMaker;
+	}
+
+	public String getSummonerByName(RegionNation nation, String name) {
+		String requestURL = apiRequestURLMaker.summonerApi(nation, name);
+		return GetDataFromExternalApi.getDataFromApi(requestURL);
 	}
 	
-
-	final String riotUrl = "api.riotgames.com/tft/";
-
 	public String getSummonerById(String pid) {
 		return null;
 	}
-
-	public String getMatch(String matchId) {
-		return null;
+	
+	public String getMatch(RegionNation nation, String matchId) {
+		String requestURL = apiRequestURLMaker.matchByMatchId(nation, matchId);
+		return GetDataFromExternalApi.getDataFromApi(requestURL);
 	}
-
+	
+	
 	public String getLeagueByTier(String tier) {
 		return null;
 	}
@@ -38,16 +50,6 @@ public class RiotApiRequester {
 	}
 	// json simple 로 파싱
 
-	private String urlMaker(String region, String subUrl, String keyword){
-		StringBuffer url = new StringBuffer();
-		url.append(region);
-		url.append(".");
-		url.append(riotUrl);
-		url.append(subUrl);
-		url.append(keyword);
-		url.append("?api_key="+constructorProperties.getApiKey());
-		return url.toString();
-	}
 	
 	//    이름=>puuid채굴 => 참가 매치 아이디 채굴 /tft/match/v1/matches/by-puuid/{puuid}/ids
 	

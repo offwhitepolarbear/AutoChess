@@ -1,5 +1,8 @@
 package com.kihwangkwon.businesslogic.match.service;
 
-public interface MatchService {
+import com.kihwangkwon.businesslogic.match.domain.Match;
+import com.kihwangkwon.riotapi.domain.RegionNation;
 
+public interface MatchService {
+	public Match getMatch(RegionNation region, String matchId);
 }

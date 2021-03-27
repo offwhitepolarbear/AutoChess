@@ -51,21 +51,24 @@ public class GetDataFromExternalApi {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		try {
-			responseData = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
+		//응답이 정상적인 경우에만 진행
+		if(httpResponse.getStatusLine().getStatusCode()==200) {
+			try {
+				responseData = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		return responseData;
 	}
 	

@@ -12,4 +12,7 @@ import lombok.RequiredArgsConstructor;
 @ConfigurationProperties("external")
 public final class ConstructorProperties {
     private final String apiKey;
+    public String getApiKey(){
+    	return apiKey.replaceAll("apiKey:", "");
+    }
 }
