@@ -1,19 +1,15 @@
 package com.kihwangkwon.businesslogic.player.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.kihwangkwon.properties.ClassPathProperties;
-
+@RequestMapping("/player")
 @Controller
 public class PlayerController {
 	
-	@RequestMapping("/player")
+	@RequestMapping("")
 	public String playerMain() {
 		return "/player/Player";
 	}
-	
 	
 }

@@ -31,8 +31,14 @@ public class RiotApiRequester {
 		return GetDataFromExternalApi.getDataFromApi(requestURL);
 	}
 	
-	public String getSummonerById(String pid) {
-		return null;
+	public String getSummonerBypuuid(RegionNation nation, String puuid) {
+		String requestURL = apiRequestURLMaker.summonerApiPuuid(nation, puuid);
+		return GetDataFromExternalApi.getDataFromApi(requestURL);
+	}
+	
+	public String getMatchList(RegionNation nation, String puuid) {
+		String requestURL = apiRequestURLMaker.matchList(nation, puuid);
+		return GetDataFromExternalApi.getDataFromApi(requestURL);
 	}
 	
 	public String getMatch(RegionNation nation, String matchId) {

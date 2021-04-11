@@ -73,7 +73,6 @@ public class MatchPlayer {
 	@OneToMany
 	@Cascade(CascadeType.ALL)
 	@JoinColumns({
-		
 		@JoinColumn(name="matchPlayerId", referencedColumnName = "id"),	
 	})
 	List<MatchPlayerChampion> matchPlayerChampionList; 

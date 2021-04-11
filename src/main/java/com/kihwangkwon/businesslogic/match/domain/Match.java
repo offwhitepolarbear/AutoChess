@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 import com.kihwangkwon.businesslogic.player.domain.PlayerMatch;
@@ -36,6 +38,7 @@ public class Match {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NaturalId
 	private String matchId;
 	private String gameVersion;
 	private double gameLength;
@@ -44,7 +47,6 @@ public class Match {
 	private String tftSetNumber;
 	private String dataVersion;
 	private String queueId;
-	
 	
 	@OneToMany
 	@Cascade(CascadeType.ALL)
@@ -56,7 +58,7 @@ public class Match {
 		this.matchId = matchId;
 		this.gameVersion = gameVersion;
 		this.gameLength = gameLength;
-		this. gameDatetime = gameDatetime;
+		this.gameDatetime = gameDatetime;
 		this.tftSetNumber = tftSetNumber;
 		this.dataVersion = dataVersion;
 		this.queueId = queueId;

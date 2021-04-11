@@ -1,5 +1,6 @@
 package com.kihwangkwon.businesslogic.player.domain;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.NaturalId;
 
 import com.kihwangkwon.domain.enums.Tier;
 import com.kihwangkwon.riotapi.domain.RegionNation;
@@ -22,17 +25,21 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Player {
+public class Player implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String accountId;
+	private String playerId;
+	
+	@NaturalId(mutable = false)
 	private String puuid;
+	
+	private String accountId;
 	private String name;
-	private RegionNation region;
+	private String region;
 	private String profileIconId;
-	private String revisionDate;
+	private Timestamp revisionDate;
 	private int summonerLevel;
 	private String server;
 	private Tier tier;
@@ -41,12 +48,26 @@ public class Player {
 	private Timestamp lastRequest;
 	
 	@OneToMany
-	@JoinColumn(name = "playerId", referencedColumnName="id") 
+	@JoinColumn(name = "puuid", referencedColumnName="puuid") 
 	private List<PlayerMatch> playerMatchList;
 	
 	@Builder
-	public Player(String accountId, String puuid, RegionNation region) {
-		
+	public Player(String playerId
+			, String accountId
+			, String puuid
+			, String name
+			, String profileIconId
+			, Timestamp revisionDate 
+			, int summonerLevel
+			, String region) {
+		this.playerId = playerId;
+		this.accountId = accountId;
+		this.puuid = puuid;
+		this.name = name;
+		this.profileIconId = profileIconId;
+		this.revisionDate = revisionDate;
+		this.summonerLevel = summonerLevel;
+		this.region = region;
 	}
 	
 

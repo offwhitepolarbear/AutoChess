@@ -39,6 +39,20 @@ public class ApiRequestURLMaker {
 		return url.toString();
 	}
 	
+	public String summonerApiPuuid(RegionNation nation, String puuid) {
+		StringBuffer url = new StringBuffer();
+		url.append("https://");
+		url.append(nation);
+		url.append(".");
+		url.append("api.riotgames.com/tft/summoner/v1/summoners/by-puuid/");
+		url.append(puuid);
+		url.append("?");
+		url.append("api_key=");
+		url.append(constructorProperties.getApiKey());
+		return url.toString();
+	}
+	
+	
 	public String matchList(RegionNation nation, String puuid) {
 		StringBuffer url = new StringBuffer();
 		url.append("https://");
