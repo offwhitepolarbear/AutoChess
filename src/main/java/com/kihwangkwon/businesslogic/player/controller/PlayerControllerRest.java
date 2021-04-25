@@ -26,6 +26,11 @@ public class PlayerControllerRest {
 		Player player = playerService.getPlayerByName(region, playerName);
 		return player;
 	}
+	@RequestMapping("/playerMatch/{RegionNation}/{puuid}")
+	public List<PlayerMatch> getPlayerMatchList(@PathVariable("RegionNation") String regionNation, @PathVariable("puuid") String puuid){
+		return playerService.getPlayerMatchListByPuuid(RegionNation.valueOf(regionNation), puuid);
+	}
+	
 	
 	@RequestMapping("/puuidList")
 	public String getRecentMatch(@ModelAttribute List<Player> list) {

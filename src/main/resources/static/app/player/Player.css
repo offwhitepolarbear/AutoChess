@@ -27,3 +27,25 @@
 	justify-content: center;
 */
 }
+#player_icon{
+	width: 128px;
+}
+.champion{
+	display: inline-block;
+	width: 64px;
+	padding: 2px;
+}
+.champion_star{
+	text-align: center;
+}
+
+.champion_items{
+	width: 100%;
+	text-align: center;
+}
+.item_img{
+	width: 25%
+}
+.empty_item_img{
+	height: 16px;
+}

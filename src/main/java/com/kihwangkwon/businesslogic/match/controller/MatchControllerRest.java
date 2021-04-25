@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kihwangkwon.businesslogic.match.domain.Match;
+import com.kihwangkwon.businesslogic.match.domain.MatchPlayer;
 import com.kihwangkwon.businesslogic.match.service.MatchService;
 import com.kihwangkwon.businesslogic.player.domain.PlayerMatch;
 import com.kihwangkwon.riotapi.domain.RegionNation;
@@ -32,8 +33,14 @@ public class MatchControllerRest {
 	
 	@RequestMapping("/matchList/matchIds")
 	public List<Match> searchMatchListByMatchIds(@RequestBody List<PlayerMatch> matchList){
-		System.out.println(matchList);
 		return matchService.getMatchList(matchList);
 	}
+	
+	@RequestMapping("/matchPlayerList/{puuid}")
+	public List<MatchPlayer> searchMatchListByMatchIdAndPuuid(@PathVariable("puuid") String puuid){
+		return matchService.getMatchPlayerListByPuuid(puuid);
+	}
+
+	
 	
 }

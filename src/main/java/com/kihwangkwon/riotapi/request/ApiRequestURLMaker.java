@@ -52,6 +52,24 @@ public class ApiRequestURLMaker {
 		return url.toString();
 	}
 	
+	public String summonerLeagueDeatail(RegionNation nation, String summonerId) {
+		StringBuffer url = new StringBuffer();
+		url.append("https://");
+		url.append(nation);
+		url.append(".");
+		url.append("api.riotgames.com/tft/league/v1/entries/by-summoner/");
+		url.append(summonerId);
+		url.append("?");
+		url.append("api_key=");
+		url.append(constructorProperties.getApiKey());
+		return url.toString();
+	}
+	
+	public String legueSummonerList(RegionNation nation, String leagueId) {
+		///tft/league/v1/leagues/{leagueId}
+		StringBuffer url = new StringBuffer();
+		return url.toString();
+	}
 	
 	public String matchList(RegionNation nation, String puuid) {
 		StringBuffer url = new StringBuffer();
@@ -60,6 +78,7 @@ public class ApiRequestURLMaker {
 		url.append(".api.riotgames.com/tft/match/v1/matches/by-puuid/");
 		url.append(puuid);
 		//count 만큼 전적 가져옴
+		//200 이상은 최근 200개만 가져오는듯
 		url.append("/ids?count=99999&");
 		url.append("api_key=");
 		url.append(constructorProperties.getApiKey());

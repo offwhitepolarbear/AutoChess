@@ -48,20 +48,21 @@ public class MatchPlayer {
 	private String species;
 	
 	@Builder
-	public MatchPlayer(String puuid, int goldLeft, int lastRound, int level, int placement
+	public MatchPlayer(String matchId, String puuid, int goldLeft, int lastRound, int level, int placement
 			, int damegeToPlayers, int playersEliminated, double timeEliminated
 			, String contentId, String skinId, String species) {
+		this.matchId = matchId;
 		this.puuid = puuid;
 		this.goldLeft = goldLeft; 
 		this.lastRound=lastRound;
-		this. level=level;
-		this. placement=placement;
-		this. damegeToPlayers=damegeToPlayers;
-		this. playersEliminated=playersEliminated;
-		this. timeEliminated=timeEliminated;
-		this. contentId=contentId;
-		this. skinId=skinId;
-		this. species=species;
+		this.level=level;
+		this.placement=placement;
+		this.damegeToPlayers=damegeToPlayers;
+		this.playersEliminated=playersEliminated;
+		this.timeEliminated=timeEliminated;
+		this.contentId=contentId;
+		this.skinId=skinId;
+		this.species=species;
 	}
 	
 	/*

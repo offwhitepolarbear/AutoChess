@@ -36,6 +36,11 @@ public class RiotApiRequester {
 		return GetDataFromExternalApi.getDataFromApi(requestURL);
 	}
 	
+	public String getSummonerDetailBySummonerId(RegionNation nation, String summonerId) {
+		String requestURL = apiRequestURLMaker.summonerLeagueDeatail(nation, summonerId);
+		return GetDataFromExternalApi.getDataFromApi(requestURL);
+	}
+	
 	public String getMatchList(RegionNation nation, String puuid) {
 		String requestURL = apiRequestURLMaker.matchList(nation, puuid);
 		return GetDataFromExternalApi.getDataFromApi(requestURL);

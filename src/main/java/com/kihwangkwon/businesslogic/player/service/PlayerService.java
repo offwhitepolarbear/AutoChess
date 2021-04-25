@@ -12,7 +12,9 @@ public interface PlayerService {
 	
 	Player getPlayerByPuuid(RegionNation region, String puuid);
 	
-	public List<PlayerMatch> updatePlayerMatchList(RegionNation region, String puuid);
+	List<PlayerMatch> getPlayerMatchListByPuuid(RegionNation region, String puuid);
+	
+	List<PlayerMatch> updatePlayerMatchList(RegionNation region, String puuid);
 	
 	List<Player> getPlayerListByPuuid(List<Player> playerList);
 	

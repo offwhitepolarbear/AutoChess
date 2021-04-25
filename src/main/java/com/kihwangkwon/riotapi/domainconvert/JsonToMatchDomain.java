@@ -51,13 +51,13 @@ public class JsonToMatchDomain {
 	private List<MatchPlayer> mapListToMatchPlayerList(List<Map> playerList,String matchId){
 		List<MatchPlayer> matchPlayerList = new ArrayList<MatchPlayer>();
 		for (Map player:playerList) {
-			MatchPlayer matchPlayer = mapToPlayer(player, matchId);
+			MatchPlayer matchPlayer = mapToMatchPlayer(player, matchId);
 			matchPlayerList.add(matchPlayer);
 		}
 		return matchPlayerList;
 	}
 	
-	private MatchPlayer mapToPlayer(Map map, String matchId) {
+	private MatchPlayer mapToMatchPlayer(Map map, String matchId) {
 
 		Map pet = (Map) map.get("companion");
 		final String contentId =  (String) pet.get("content_ID");
@@ -78,6 +78,7 @@ public class JsonToMatchDomain {
 		List<MatchPlayerTrait> matchPlayerTraitList = mapListToMatchPlayerTraitList(traitMapList, matchId, puuid);
 		
 		MatchPlayer player = MatchPlayer.builder()
+				.matchId(matchId)
 				.puuid(puuid)
 				.goldLeft(goldLeft)
 				.lastRound(lastRound)
@@ -128,18 +129,23 @@ public class JsonToMatchDomain {
 		int itemTwo = 0;
 		int itemThree = 0;
 		try {
-			List<Integer> itemList = (List<Integer>) map.get("items");
+			
+			List<BigInteger> itemList = (List<BigInteger>) map.get("items");
+			
 			if(itemList.size()>0) {
-				for(int i=0;i<itemList.size();i++) {
-					if(i==0) {
-						itemOne=itemList.get(i);
-					}
-					if(i==1) {
-						itemTwo=itemList.get(i);
-					}
-					if(i==2) {
-						itemThree=itemList.get(i);
-					}
+				try {
+					itemOne = itemList.get(0).intValue();
+				}catch (Exception e) {
+				}
+				try {
+					itemTwo=itemList.get(1).intValue();
+				}catch (Exception e) {
+					//아이템2가 없는 경우 에러발생
+				}
+				try {
+					itemThree=itemList.get(2).intValue();
+				}catch (Exception e) {
+					//아이템3이 없는 경우 에러발생
 				}
 			}
 		}catch (Exception e) {

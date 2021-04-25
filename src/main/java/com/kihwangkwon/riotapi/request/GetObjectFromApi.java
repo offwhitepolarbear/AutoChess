@@ -1,25 +1,18 @@
 package com.kihwangkwon.riotapi.request;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
+import org.hibernate.property.access.spi.GetterFieldImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
 import com.kihwangkwon.businesslogic.match.domain.Match;
-import com.kihwangkwon.businesslogic.match.domain.MatchPlayer;
-import com.kihwangkwon.businesslogic.match.domain.MatchPlayerChampion;
-import com.kihwangkwon.businesslogic.match.domain.MatchPlayerTrait;
-import com.kihwangkwon.businesslogic.match.service.MatchRepository;
 import com.kihwangkwon.businesslogic.player.domain.Player;
 import com.kihwangkwon.businesslogic.player.domain.PlayerMatch;
-import com.kihwangkwon.riotapi.domain.ApiMatch;
 import com.kihwangkwon.riotapi.domain.RegionNation;
 import com.kihwangkwon.riotapi.domainconvert.JsonToMatchDomain;
 import com.kihwangkwon.riotapi.domainconvert.JsonToPlayerDomain;
@@ -30,30 +23,122 @@ public class GetObjectFromApi {
 	private RiotApiRequester riotApiRequester;
 	private JsonToMatchDomain jsonToMatchDomain;
 	private JsonToPlayerDomain jsonToPlayerDomain;
+	private Gson gson;
 	
 	@Autowired
 	public GetObjectFromApi(RiotApiRequester riotApiRequester
 							, JsonToMatchDomain jsonToMatchDomain
-							, JsonToPlayerDomain jsonToPlayerDomain) {
+							, JsonToPlayerDomain jsonToPlayerDomain
+							, Gson gson) {
 		this.riotApiRequester = riotApiRequester;
 		this.jsonToMatchDomain = jsonToMatchDomain;
 		this.jsonToPlayerDomain = jsonToPlayerDomain;
+		this.gson = gson;
 	}
 	
-	public Player getPlayer(RegionNation nation, String name) {
+	//DB에 존재하지 않는 플레이어에 대해 검색하는 경우 이름값이 유효한지 등의 검사 필요하기 때문에 중간처리 추가된 메서드 호출
+	public Player getPlayerFromApiFirst(RegionNation nation, String name){
+		Player result = null;
 		String apiResponse = riotApiRequester.getSummonerByName(nation, name);
-		Map map = null;
-		Player player = null;
-		try {
-			map = jsonStringToMap(apiResponse);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		if(map!=null) {
-			player = jsonToPlayerDomain.getPlayer(map,nation);
-		}
 		
+		// api 에서 정상 리턴 온경우(검색이 된 경우)
+		if (apiResponse!=null) {
+			result = getPlayer(nation, name);
+		}
+		//응답없는 경우 (존재하지 않는 아이디 일 경우)
+		else {
+			//아무 처리 하지 않음으로써 null player를 리턴
+		}
+		return result;
+	}
+	
+	public Player getPlayer(Player player, RegionNation nation, String name){
+		//db에 플레이어 있는경우 id 할당하고 api에서 가져옴
+		if(player!=null) {
+			Long id = player.getId();
+			player = getPlayer(nation, name);
+			player.setId(id);
+		}
+		//db에 플레이어 없는경우
+		else {
+			player = getPlayer(nation, name);
+		}
 		return player;
+	}
+	
+	public Player getPlayer(RegionNation nation, String name){
+		String apiResponse = riotApiRequester.getSummonerByName(nation, name);
+		Player player = null;
+		//정상적으로 응답이 온 경우 파싱해서 플레이어 객체 생성 그외의 경우에는 null player 리턴됨
+		if(apiResponse != null) {
+			Map map = null;
+			try {
+				map = jsonStringToMap(apiResponse);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			player = jsonToPlayerDomain.getPlayer(map, nation);
+			String apiResponsePlayerDetail = riotApiRequester.getSummonerDetailBySummonerId(nation, player.getSummonerId());
+			apiResponsePlayerDetail = playerDetailRankToInt(apiResponsePlayerDetail);
+			player = jsonToPlayerDomain.getMergedPlayer(player, apiResponsePlayerDetail);
+		}
+		return player;
+	}
+	
+	
+	
+	public Player getPlayerByNationAndName(RegionNation nation, String name){
+		String apiResponse = riotApiRequester.getSummonerByName(nation, name);
+		Player player = null;
+		//정상적으로 응답이 온 경우 파싱해서 플레이어 객체 생성 그외의 경우에는 null player 리턴됨
+		if(apiResponse != null) {
+			Map map = null;
+			try {
+				map = jsonStringToMap(apiResponse);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			player = jsonToPlayerDomain.getPlayer(map, nation);
+			String apiResponsePlayerDetail = riotApiRequester.getSummonerDetailBySummonerId(nation, player.getSummonerId());
+			apiResponsePlayerDetail = playerDetailRankToInt(apiResponsePlayerDetail);
+			player = jsonToPlayerDomain.getMergedPlayer(player, apiResponsePlayerDetail);
+		}
+		return player;
+	}
+	
+	
+	
+	
+	//player 상세 리스트 형식으로 오는거 벗겨내고 랭크 값 숫자로 대입시키는 메서드
+	private String playerDetailRankToInt(String apiResponsePlayerDetail) {
+		Gson gson = new Gson();
+		Map[] playerDetailArray = gson.fromJson(apiResponsePlayerDetail, Map[].class);
+		Map playerMap = playerDetailArray[0];
+		String rank = (String)playerMap.get("rank");
+		int rankValue = getRank(rank);
+		playerMap.put("rank", rankValue);
+		return gson.toJson(playerMap);
+	}
+	
+	private int getRank(String rank) {
+		int result = 0;
+		
+		if(rank.equals("I")) {
+			result = 1;
+		}
+		if(rank.equals("II")) {
+			result = 2;
+		}
+		if(rank.equals("III")) {
+			result = 3;
+		}
+		if(rank.equals("IV")) {
+			result = 4;
+		}
+		if(rank.equals("V")) {
+			result = 5;
+		}		
+		return result;
 	}
 	
 	public Player getPlayerByPuuid(RegionNation nation, String puuid) {
@@ -68,6 +153,14 @@ public class GetObjectFromApi {
 		if(map!=null) {
 			player = jsonToPlayerDomain.getPlayer(map,nation);
 		}
+		
+		return player;
+	}
+	
+	public Player getPlayerDetailByPlayerId(Player player) {
+		RegionNation region = RegionNation.valueOf(player.getRegion());
+		String summonerId = player.getSummonerId();
+		String apiResponse = riotApiRequester.getSummonerDetailBySummonerId(region, summonerId);
 		
 		return player;
 	}
@@ -87,10 +180,16 @@ public class GetObjectFromApi {
 		return playerMatchList;
 	}
 	
-	public Match getMatch(RegionNation nation, String matchId) throws ParseException {
+	public Match getMatch(RegionNation nation, String matchId) {
 		String apiResponse  = riotApiRequester.getMatch(nation, matchId);
 		
-		Map map = jsonStringToMap(apiResponse);
+		Map map = null;
+		try {
+			map = jsonStringToMap(apiResponse);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Match match = jsonToMatchDomain.getMatchObject(map);
 		

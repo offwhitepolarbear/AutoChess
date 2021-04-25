@@ -36,28 +36,12 @@ public class PlayerServiceImpl implements PlayerService {
 		
 		Player player = playerRepository.findByRegionAndName(region.toString(), playerName);
 		
-		if(player != null) {
-			//최종조회시간 확인해서 어느정도 차이나면 전적 업데이트 필요
-			updatePlayerMatchList(RegionNation.valueOf(player.getRegion()), player.getPuuid());
-		}
-		
-		if(player == null) {
-			player = getPlayerFromApi(region,playerName);
-			
-			if(player != null) {
-				updatePlayerMatchList(RegionNation.valueOf(player.getRegion()), player.getPuuid());
-			}
-		
-		}
-		
-		return player;
-	}
-	
-	private Player getPlayerFromApi(RegionNation region, String playerName) {
-		Player player = getObjectFromApi.getPlayer(region, playerName);
-		//화면에서 검색어 입력 방식이라 없는 유저일 수 있음 널 예외처리 필요
-		if(player != null) {
+		player = getObjectFromApi.getPlayer(player, region, playerName);
+
+		//정상적으로 검색이되서 player값이 리턴된 경우에만 db에 저장 후 playerMatch 저장
+		if(player!=null) {
 			player = playerRepository.save(player);
+			updatePlayerMatchList(region, player.getPuuid());
 		}
 		
 		return player;
@@ -77,16 +61,11 @@ public class PlayerServiceImpl implements PlayerService {
 		return player;
 	}
 	
-
-
 	private Player getPlayerFromApiByPuuid(RegionNation region, String puuid) {
 		Player player = getObjectFromApi.getPlayerByPuuid(region, puuid);
-		//이름검색과 달리 얘는 할당된 puuid로만 호출될 거라 null 처리 필요없음
-		//id 값 가져갈 수 있게 save 실행 후 할당
 		player = playerRepository.save(player);
 		return player;
 	}
-	
 	
 	@Override
 	public List<PlayerMatch> updatePlayerMatchList(RegionNation region, String puuid) {
@@ -95,16 +74,30 @@ public class PlayerServiceImpl implements PlayerService {
 		
 		List<PlayerMatch> latestMatchList = getObjectFromApi.getMatchList(region, puuid, matchList);
 		//업데이트 할 항목이 있을 경우 업데이트 후 재조회 해서 재조회한 목록을  리턴
-		if(latestMatchList.size()>0) {
-			for(PlayerMatch playerMatch : latestMatchList) {
-				playerMatchRepository.save(playerMatch);
-			}
-			matchList = playerMatchRepository.findByPuuid(puuid);
+		List<PlayerMatch> updateList = checkPlayerMatchListDupliCated(matchList, latestMatchList);
+		
+		for(PlayerMatch playerMatch : updateList) {
+			playerMatchRepository.save(playerMatch);
 		}
 		
 		return matchList;
 	}
-
+	
+	private List<PlayerMatch> checkPlayerMatchListDupliCated(List<PlayerMatch> dbList, List<PlayerMatch> apiList){
+		for(PlayerMatch apiPlayerMatch:apiList) {
+			for(PlayerMatch dbPlayerMatch: dbList) {
+				String apiMatchId = apiPlayerMatch.getMatchId();
+				String dbMatchId = dbPlayerMatch.getMatchId();
+				if(apiMatchId.equals(dbMatchId)) {
+					apiList.remove(apiPlayerMatch);
+					dbList.remove(dbPlayerMatch);
+				}
+			}
+		}
+		
+		return apiList;
+	}
+	
 	
 	//전적검색에서 매치 유저 이름이 안나올경우 새로고침 하기 위해 만듬
 	@Override
@@ -125,7 +118,7 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public List<PlayerMatch> updatePlayerMatchFromMatchApi(Match match,RegionNation region) {
+	public List<PlayerMatch> updatePlayerMatchFromMatchApi(Match match, RegionNation region) {
 		String matchId = match.getMatchId();
 		List<PlayerMatch> playerMatchList = getPlayerMatchListByMatchId(matchId);
 		List<MatchPlayer> matchPlayerList = match.getMatchPlayerList();
@@ -168,5 +161,14 @@ public class PlayerServiceImpl implements PlayerService {
 		return result;
 	}
 
+	private List<PlayerMatch> savePlayerMatchList(List<PlayerMatch> playerMatchList){
+		return null;
+	}
 
+	@Override
+	public List<PlayerMatch> getPlayerMatchListByPuuid(RegionNation region, String puuid) {
+		return playerMatchRepository.findByRegionAndPuuid(region.toString(), puuid);
+	}
+	
+	
 }
