@@ -32,9 +32,9 @@ public class AutoChessApplication {
 		
 		final String linuxPorpertiesLocation = 
 				"spring.config.location="
-				+ "/home/ec2-user/app/0config/autochess/application.yml"
+				+ "/home/ec2-user/app/00config/autochess/application.yml"
 				+","
-				+ "/home/ec2-user/app/0config/autochess/riot.yml"
+				+ "/home/ec2-user/ap0config/autochess/riot.yml"
 				+","
 				+"classpath:/application.yml";
 				;
