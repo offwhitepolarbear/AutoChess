@@ -8,6 +8,6 @@ public class ChampionController {
 	
 	@RequestMapping("/champion")
 	public String championMain() {
-		return "/champion/Champion.html";
+		return "champion/Champion.html";
 	}
 }

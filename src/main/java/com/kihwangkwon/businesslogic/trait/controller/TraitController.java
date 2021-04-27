@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TraitController {
 	@RequestMapping("/trait")
 	public String trait() {
-		return "/trait/Trait.html";
+		return "trait/Trait.html";
 	}
 }

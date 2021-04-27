@@ -18,6 +18,6 @@ public class MatchController {
 
 	@RequestMapping("")
 	public String matchMain() {
-		return "/match/Match.html";
+		return "match/Match";
 	}
 }

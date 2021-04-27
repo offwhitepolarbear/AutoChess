@@ -9,7 +9,7 @@ public class PlayerController {
 	
 	@RequestMapping("")
 	public String playerMain() {
-		return "/player/Player";
+		return "player/Player";
 	}
 	
 }
