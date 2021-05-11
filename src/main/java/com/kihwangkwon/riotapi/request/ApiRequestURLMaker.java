@@ -93,7 +93,6 @@ public class ApiRequestURLMaker {
 		url.append(matchId);
 		url.append("?api_key=");
 		url.append(constructorProperties.getApiKey());
-		System.out.println(constructorProperties.getApiKey());
 		return url.toString();
 	}
 	

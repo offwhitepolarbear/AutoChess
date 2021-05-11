@@ -27,7 +27,6 @@ public class ChampionServiceImpl implements ChampionService {
 				//jsonObject;
 				try {
 					List<Object> list = jsonParser.parseArray();
-					System.out.println(list);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

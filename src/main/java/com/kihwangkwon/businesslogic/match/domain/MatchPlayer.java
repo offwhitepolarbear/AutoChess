@@ -28,9 +28,11 @@ public class MatchPlayer {
 	private Long id;
 	
 	private Long matchInfoId;
-	
+		
 	private String matchId;
 	private String puuid;
+	
+	private double tftSetNumberDetail;
 	
 	private int goldLeft;
 	private int lastRound;
@@ -48,11 +50,13 @@ public class MatchPlayer {
 	private String species;
 	
 	@Builder
-	public MatchPlayer(String matchId, String puuid, int goldLeft, int lastRound, int level, int placement
+	public MatchPlayer(String matchId, String puuid, double tftSetNumberDetail
+			, int goldLeft, int lastRound, int level, int placement
 			, int damegeToPlayers, int playersEliminated, double timeEliminated
 			, String contentId, String skinId, String species) {
 		this.matchId = matchId;
 		this.puuid = puuid;
+		this.tftSetNumberDetail = tftSetNumberDetail;
 		this.goldLeft = goldLeft; 
 		this.lastRound=lastRound;
 		this.level=level;

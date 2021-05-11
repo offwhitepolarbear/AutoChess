@@ -5,7 +5,7 @@ import java.util.List;
 import com.kihwangkwon.staticdata.champion.domain.StaticChampion;
 
 public interface StaticChampionService {
-	public int insertStaticChampionAll();
-	public int insertStaticChampion(StaticChampion staticChampion);
+	public int insertStaticChampionAll(String version);
+	public StaticChampion insertStaticChampion(StaticChampion staticChampion);
 	public List staticChampionList();
 }

@@ -7,15 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kihwangkwon.businesslogic.match.domain.Match;
 import com.kihwangkwon.businesslogic.match.domain.MatchPlayer;
 import com.kihwangkwon.businesslogic.match.domain.MatchPlayerChampion;
 import com.kihwangkwon.businesslogic.match.domain.MatchPlayerTrait;
+import com.kihwangkwon.businesslogic.version.service.GameVersionInfoRepository;
+import com.kihwangkwon.businesslogic.version.service.GameVersionInfoService;
+import com.kihwangkwon.staticdata.champion.domain.StaticChampion;
+import com.kihwangkwon.staticdata.champion.service.StaticChampionRepository;
 
 @Service
 public class JsonToMatchDomain {
+	
+	private StaticChampionRepository staticChampionRepository;
+	private GameVersionInfoService gameVersionInfoService;
+	
+	
+	@Autowired
+	public JsonToMatchDomain(StaticChampionRepository staticChampionRepository, GameVersionInfoService gameVersionInfoService) {
+		this.staticChampionRepository = staticChampionRepository;
+		this.gameVersionInfoService = gameVersionInfoService;
+	}
 	
 	public Match getMatchObject(Map map) {
 		
@@ -28,10 +43,12 @@ public class JsonToMatchDomain {
 		String gameVersion = (String) info.get("game_version");
 		String queueId = ((BigInteger)info.get("queue_id")).toString();
 		String tftSetNumber = ((BigInteger) info.get("tft_set_number")).toString();
-	
+		
+		double tftSetNumberDetail = gameVersionInfoService.getSetNumber(gameVersion);
+		
 		List<Map> playerList = (List<Map>) info.get("participants");
 		
-		List<MatchPlayer> matchPlayerList = mapListToMatchPlayerList(playerList, matchId);
+		List<MatchPlayer> matchPlayerList = mapListToMatchPlayerList(playerList, matchId, tftSetNumberDetail);
 		
 		Match match = Match.builder()
 				.matchId(matchId)
@@ -41,6 +58,7 @@ public class JsonToMatchDomain {
 				.gameLength(gameLength)
 				.queueId(queueId)
 				.tftSetNumber(tftSetNumber)
+				.tftSetNumberDetail(tftSetNumberDetail)
 				.build();
 		
 		match.setMatchPlayerList(matchPlayerList);
@@ -48,16 +66,16 @@ public class JsonToMatchDomain {
 		return match;
 	}
 	
-	private List<MatchPlayer> mapListToMatchPlayerList(List<Map> playerList,String matchId){
+	private List<MatchPlayer> mapListToMatchPlayerList(List<Map> playerList, String matchId, double tftSetNumberDetail){
 		List<MatchPlayer> matchPlayerList = new ArrayList<MatchPlayer>();
 		for (Map player:playerList) {
-			MatchPlayer matchPlayer = mapToMatchPlayer(player, matchId);
+			MatchPlayer matchPlayer = mapToMatchPlayer(player, matchId, tftSetNumberDetail);
 			matchPlayerList.add(matchPlayer);
 		}
 		return matchPlayerList;
 	}
 	
-	private MatchPlayer mapToMatchPlayer(Map map, String matchId) {
+	private MatchPlayer mapToMatchPlayer(Map map, String matchId, double tftSetNumberDetail) {
 
 		Map pet = (Map) map.get("companion");
 		final String contentId =  (String) pet.get("content_ID");
@@ -80,6 +98,7 @@ public class JsonToMatchDomain {
 		MatchPlayer player = MatchPlayer.builder()
 				.matchId(matchId)
 				.puuid(puuid)
+				.tftSetNumberDetail(tftSetNumberDetail)
 				.goldLeft(goldLeft)
 				.lastRound(lastRound)
 				.level(level)
@@ -110,6 +129,7 @@ public class JsonToMatchDomain {
 	}
 	
 	private MatchPlayerChampion mapToMatchPlayerChampion(Map map, String matchId, String puuid) {
+		
 		String championId = (String) map.get("character_id");
 		
 		String name = (String) map.get("name");

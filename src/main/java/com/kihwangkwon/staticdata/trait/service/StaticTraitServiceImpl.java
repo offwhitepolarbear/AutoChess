@@ -32,11 +32,11 @@ public class StaticTraitServiceImpl implements StaticTraitService {
 	}
 	
 	@Override
-	public int insertStaticTraitAll() {
+	public int insertStaticTraitAll(String version) {
 		int insertCount = 0;
-		List<Object> traitList = staticJsonParsing.traitList();
+		List<Object> traitList = staticJsonParsing.traitList(version);
 		for(Object trait : traitList) {
-			insertStaticTrait(objectToStaticTrait(trait));
+			insertStaticTrait(objectToStaticTrait(trait, version));
 			insertCount++;
 		}
 		return insertCount;
@@ -47,8 +47,11 @@ public class StaticTraitServiceImpl implements StaticTraitService {
 		return staticTraitRepository.findAll();
 	}
 	
-	public StaticTrait objectToStaticTrait(Object object) {
+	public StaticTrait objectToStaticTrait(Object object, String version) {
 		HashMap hashMap = (HashMap)object;
+		
+		String tftSetNumber = staticJsonParsing.versionConvert(version);
+		
 		String key = (String) hashMap.get("key");
 		String name = (String) hashMap.get("name");
 		String description = (String) hashMap.get("description");
@@ -56,6 +59,9 @@ public class StaticTraitServiceImpl implements StaticTraitService {
 		List<HashMap> setList = (List<HashMap>) hashMap.get("sets");
 		
 		StaticTrait staticTrait = new StaticTrait();
+		
+		staticTrait.setTftSetNumber(tftSetNumber);
+		
 		staticTrait.setTraitKey(key);
 		staticTrait.setName(name);
 		staticTrait.setDescription(description);

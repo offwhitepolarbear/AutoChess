@@ -1,5 +1,6 @@
 package com.kihwangkwon.staticdata.champion.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,9 @@ public class StaticChampion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(length = 5)//DB에 적용되는 컬럼의 크기
+	private String tftSetNumber;
 	
 	private String name;
 	

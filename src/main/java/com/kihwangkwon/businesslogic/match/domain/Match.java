@@ -39,6 +39,7 @@ public class Match {
 	private Timestamp gameDatetime;
 	
 	private String tftSetNumber;
+	private double tftSetNumberDetail;
 	private String dataVersion;
 	private String queueId;
 	
@@ -49,12 +50,21 @@ public class Match {
 	List<MatchPlayer> matchPlayerList;
 
 	@Builder
-	public Match(String matchId,String gameVersion, double gameLength,Timestamp gameDatetime,String tftSetNumber,String dataVersion,String queueId) {
+	public Match(
+			String matchId
+			, String gameVersion
+			, double gameLength
+			, Timestamp gameDatetime
+			, String tftSetNumber
+			, double tftSetNumberDetail
+			, String dataVersion
+			, String queueId) {
 		this.matchId = matchId;
 		this.gameVersion = gameVersion;
 		this.gameLength = gameLength;
 		this.gameDatetime = gameDatetime;
 		this.tftSetNumber = tftSetNumber;
+		this.tftSetNumberDetail = tftSetNumberDetail;
 		this.dataVersion = dataVersion;
 		this.queueId = queueId;
 	}

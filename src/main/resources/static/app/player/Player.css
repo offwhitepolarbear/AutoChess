@@ -1,14 +1,31 @@
+#body_wrap{
+	background-color: orange;
+	text-align:center;
+	
+	/*
+	align-items: center;
+	justify-content: center;
+	*/
+}
+
 #player_search_section{
+	/*
 	align-content:center;
 	justify-content: center;
+	*/
 }
-/*
-#player_search_section_sub
-*/
+#region{
+	height: 44px;
+	/*
+	justify-content: center;
+	*/
+}
 #summoner_name{
 	width: 75%;
     background: #fff;
+    /*
     display: flex;
+    */
     border: 1px solid #dfe1e5;
     box-shadow: none;
     border-radius: 24px;
@@ -19,14 +36,11 @@
     align-items: center;
     justify-content: center;
 }
-#region{
-	justify-content: center;
+#search{
+	height: 44px;
+	background-color: white;
 }
-#summoner_name{
-	/*
-	justify-content: center;
-*/
-}
+
 #player_icon{
 	width: 128px;
 }
@@ -48,4 +62,9 @@
 }
 .empty_item_img{
 	height: 16px;
+}
+
+.player_match{
+	min-height: 20px;
+	background-color: green;
 }

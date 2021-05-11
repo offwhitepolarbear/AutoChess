@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.kihwangkwon.staticdata.champion.domain.StaticChampion;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MatchPlayerChampion {
 	@Id
-	@GeneratedValue(strategy =GenerationType.IDENTITY )
+	@GeneratedValue(strategy = GenerationType.IDENTITY )
 	private Long id;
 	
 	private Long matchPlayerId;
@@ -38,8 +42,12 @@ public class MatchPlayerChampion {
 	private int itemThree;
 
 	@Builder
-	public MatchPlayerChampion(String matchId, String puuid, String championId, int cost, int star, String chosen, int itemOne
-			,int itemTwo, int itemThree, String name) {
+	public MatchPlayerChampion(
+			String matchId, String puuid
+			, String championId
+			, int cost, int star, String chosen, 
+			int itemOne, int itemTwo, int itemThree
+			, String name) {
 		this.matchId=matchId;
 		this.puuid=puuid; 
 		this.championId = championId; 
@@ -50,5 +58,11 @@ public class MatchPlayerChampion {
 		this.itemTwo = itemTwo;
 		this.itemThree = itemThree;
 		this.name = name;
+		
 	}	
+	/*
+	@OneToOne
+	@JoinColumn(name = "championId", referencedColumnName = "championId")
+	private StaticChampion staticChampion;
+	*/
 }

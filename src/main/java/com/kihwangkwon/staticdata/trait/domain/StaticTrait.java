@@ -17,6 +17,9 @@ public class StaticTrait {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(length = 5)//DB에 적용되는 컬럼의 크기
+	private String tftSetNumber;
+	
 	private String traitKey;
 	//시너지 명
 

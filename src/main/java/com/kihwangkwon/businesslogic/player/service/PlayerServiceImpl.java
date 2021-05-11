@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.persistence.criteria.Order;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.kihwangkwon.businesslogic.match.domain.Match;
@@ -167,7 +171,8 @@ public class PlayerServiceImpl implements PlayerService {
 
 	@Override
 	public List<PlayerMatch> getPlayerMatchListByPuuid(RegionNation region, String puuid) {
-		return playerMatchRepository.findByRegionAndPuuid(region.toString(), puuid);
+		Sort sort = Sort.by(Direction.DESC,"matchId");
+		return playerMatchRepository.findByRegionAndPuuid(region.toString(), puuid, sort);
 	}
 	
 	

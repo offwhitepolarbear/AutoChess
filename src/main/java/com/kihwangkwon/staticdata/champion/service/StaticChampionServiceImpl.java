@@ -24,18 +24,17 @@ public class StaticChampionServiceImpl implements StaticChampionService{
 	}
 	
 	@Override
-	public int insertStaticChampionAll() {
-		List<HashMap> list = staticJsonParsing.championList();
-		for(HashMap hashMap :list) {
-			insertStaticChampion(hashMapToStaticChampion(hashMap));
+	public int insertStaticChampionAll(String version) {
+		List<HashMap> list = staticJsonParsing.championList(version);
+		for(HashMap hashMap : list) {
+			insertStaticChampion(hashMapToStaticChampion(hashMap, version));
 		}
 		return 0;
 	}
 
 	@Override
-	public int insertStaticChampion(StaticChampion staticChampion) {
-		staticChampionRepository.save(staticChampion);
-		return 0;
+	public StaticChampion insertStaticChampion(StaticChampion staticChampion) {
+		return staticChampionRepository.save(staticChampion);
 	}
 
 	@Override
@@ -43,14 +42,21 @@ public class StaticChampionServiceImpl implements StaticChampionService{
 		return staticChampionRepository.findAll();
 	}
 	
-	private StaticChampion hashMapToStaticChampion(HashMap hashMap) {
+	private StaticChampion hashMapToStaticChampion(HashMap hashMap, String version) {
 		StaticChampion champion = new StaticChampion();
+		
+		String tftSetNumber = staticJsonParsing.versionConvert(version);
+		
 		String name = (String) hashMap.get("name");
 		String championId = (String) hashMap.get("championId");
 		int cost = ((BigInteger)hashMap.get("cost")).intValue();
+		
+		champion.setTftSetNumber(tftSetNumber);
+		
 		champion.setChampionId(championId);
 		champion.setCost(cost);
 		champion.setName(name);
+		
 		champion = setTraitToStaticChampion(champion,hashMap);
 		return champion;
 	}
@@ -74,4 +80,5 @@ public class StaticChampionServiceImpl implements StaticChampionService{
 		return champion;
 	}
 	
+
 }

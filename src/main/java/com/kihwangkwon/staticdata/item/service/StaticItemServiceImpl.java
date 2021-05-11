@@ -29,11 +29,11 @@ public class StaticItemServiceImpl implements StaticItemService{
 	}
 
 	@Override
-	public int insertStaticItemAll() {
+	public int insertStaticItemAll(String version) {
 		// TODO Auto-generated method stub
-		List<HashMap> list = staticJsonParsing.itemList();
+		List<HashMap> list = staticJsonParsing.itemList(version);
 		for(HashMap hashMap : list) {
-			insertStaticItem(hashMapToStaticItem(hashMap));
+			insertStaticItem(hashMapToStaticItem(hashMap, version));
 		}
 		return 0;
 	}
@@ -44,14 +44,36 @@ public class StaticItemServiceImpl implements StaticItemService{
 		return 0;
 	}
 	
-	private StaticItem hashMapToStaticItem(HashMap hashMap) {
+	private StaticItem hashMapToStaticItem(HashMap hashMap, String version) {
 		StaticItem staticItem = new StaticItem();
+		
+		String tftSetNumber = staticJsonParsing.versionConvert(version);
+		
 		String id = ((BigInteger)hashMap.get("id")).toString();
 		String name = (String)hashMap.get("name");
 		String description = (String)hashMap.get("description");
+		
+		staticItem.setTftSetNumber(tftSetNumber);
+
 		staticItem.setItemId(id);
 		staticItem.setName(name);
 		staticItem.setDescrition(description);
+		staticItem.setTftSetNumber(version);
 		return staticItem;
+	}
+	
+	private String versionConvert(String version) {
+		StringBuffer modifiedVersion = new StringBuffer();
+		char[] versionArray = version.toCharArray();
+		for (int i=0;i<versionArray.length;i++) {
+			if (versionArray[i]!='0') {
+				break;
+			}
+			else {
+				
+			}
+		}
+		
+		return version;
 	}
 }

@@ -3,6 +3,7 @@ package com.kihwangkwon.staticdata.item.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +19,9 @@ public class StaticItemControllerRest {
 		this.staticItemService = staticItemService;
 	}
 	
-	@RequestMapping("/manager/insert")
-	public void insertStaticItem() {
-		staticItemService.insertStaticItemAll();
+	@RequestMapping("/manager/insert/{version}")
+	public void insertStaticItem(@PathVariable String version) {
+		staticItemService.insertStaticItemAll(version);
 	}
 	
 	@RequestMapping("/itemList")

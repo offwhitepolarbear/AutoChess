@@ -7,10 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<div id='body_wrap'>
+	
 	Player 검색 창 서버
-
 	<div id='player_search_section'>
 		<div id='player_search_section_sub'> 
+			
 			<select id='region'>
 					<option value='kr'>한국</option>
 					<option value='cn'>중국</option>
@@ -19,21 +21,33 @@
 					<option value='la'>남미</option>
 					<option value='jp1'>일본</option>
 			</select> 
+			
 			<input id='summoner_name' type="text" placeholder="검색할 유저명을 입력해주세요"
 				onkeypress="javascript:press_enter_on_user_name()">
+				
+			<button id='search' onclick="javascript:search_summoner()">
+				<i class="fa fa-search fa-2x" aria-hidden="true"></i>
+			</button>
+			
 		</div>
 	</div>
 
-	<button id='search' onclick="javascript:search_summoner()">검색</button>
-	<i class="fa fa-star" aria-hidden="true"></i>
 
 	
-	
-	<div>
-	<img id='player_icon' alt="" src="">
-	</div>
-	
-	<div id='match_list'>
+		<div>
+			<div style="display: inline-block;" >
+			1<i class="fa fa-refresh fa-2x" aria-hidden="true"></i>
+			</div>
+			<div style="display: inline-block;">
+			2
+			</div>
+		</div>
+		<div id='player_info'>
+		<img id='player_icon' alt="" src="">
+		</div>
+		
+		<div id='match_list'>
+		</div>
 	</div>
 </body>
 <script type="text/javascript" src='app/player/Player.js'></script>
