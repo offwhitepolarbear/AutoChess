@@ -106,17 +106,31 @@ public class GetObjectFromApi {
 		return player;
 	}
 	
-	
-	
-	
 	//player 상세 리스트 형식으로 오는거 벗겨내고 랭크 값 숫자로 대입시키는 메서드
 	private String playerDetailRankToInt(String apiResponsePlayerDetail) {
 		Gson gson = new Gson();
 		Map[] playerDetailArray = gson.fromJson(apiResponsePlayerDetail, Map[].class);
-		Map playerMap = playerDetailArray[0];
+		Map playerMap = null;
+		String rankQueue =  "RANKED_TFT";
+		
+		//String rankTurbo = "RANKED_TFT_TURBO";
+		
+		for(Map playerDetailMap : playerDetailArray) {
+			String queueType = (String) playerDetailMap.get("queueType");
+			
+			if(queueType.equals(rankQueue)) {
+				playerMap = playerDetailMap;
+			}
+				
+		}
+		
 		String rank = (String)playerMap.get("rank");
-		int rankValue = getRank(rank);
-		playerMap.put("rank", rankValue);
+		
+		if(rank != null) {
+			int rankValue = getRank(rank);
+			playerMap.put("rank", rankValue);
+		}
+		
 		return gson.toJson(playerMap);
 	}
 	

@@ -39,7 +39,7 @@ public class MatchPlayer {
 	private int level;
 	private int placement;
 	
-	private int damegeToPlayers;
+	private int damageToPlayers;
 	//킬수
 	private int playersEliminated;
 	//탈락 시간
@@ -52,7 +52,7 @@ public class MatchPlayer {
 	@Builder
 	public MatchPlayer(String matchId, String puuid, double tftSetNumberDetail
 			, int goldLeft, int lastRound, int level, int placement
-			, int damegeToPlayers, int playersEliminated, double timeEliminated
+			, int damageToPlayers, int playersEliminated, double timeEliminated
 			, String contentId, String skinId, String species) {
 		this.matchId = matchId;
 		this.puuid = puuid;
@@ -61,7 +61,7 @@ public class MatchPlayer {
 		this.lastRound=lastRound;
 		this.level=level;
 		this.placement=placement;
-		this.damegeToPlayers=damegeToPlayers;
+		this.damageToPlayers=damageToPlayers;
 		this.playersEliminated=playersEliminated;
 		this.timeEliminated=timeEliminated;
 		this.contentId=contentId;

@@ -3,23 +3,25 @@ var all_champion_list;
 var player;
 var player_match_list;
 var match_list;
+var rounds;
 get_all_item_list();
+get_all_round_list();
 
-html_test();
+function get_all_round_list(){
+	//현재 5세트라 5할당
+	fetch('/round/rest/rounds/'+'5')
+	  .then(function(response) {
+		  //console.log(response);
+		return response.json();  
+	  })
+	  .catch(function(myJson){
+		  console.log('round_null임');
+	  })
+	  .then(function(result){
+		  rounds = result;
+	   })
+}
 
-function html_test(){
-	var refresh_button = document.getElementsByClassName('fa-refresh')[0];
-	refresh_button.setAttribute('onclick','javascript:testF()');
-	//onclick="javascript:testF()"
-	/*
-	var region = document.getElementById('region').value;
-	var star_html = document.createElement("div");
-	star_html.setAttribute("class", 'champion_star')
-	*/
-}
-function testF(){
-	console.log('testF');
-}
 
 function press_enter_on_user_name(){
 	if(event.keyCode==13){
@@ -30,7 +32,6 @@ function press_enter_on_user_name(){
 function search_summoner(){
 	//재검색시 기존 목록 지우기
 	clear_match_list_html();
-	//clear_js_objects()
 	get_player_from_server();
 }
 
@@ -39,22 +40,19 @@ function clear_match_list_html(){
 	match_list_html.innerHTML = '';
 }
 
-function clear_js_objects(){
-	player = null;
-	player_match_list = null;
-	match_list = null;
-}
-
 function get_player_from_server(){
 	
 	var region = document.getElementById('region').value;
 	
 	var summoner_name = document.getElementById('summoner_name').value;
 	
+	console.log(region+'지역코드');
+	
 	// 공백제거 라이엇 정책 공백 없어도 검색되게 되어있음
 	summoner_name = summoner_name.replace(/(\s*)/g, "");
-	
-	fetch('/player/rest/'+region+'/'+summoner_name)
+	var fetch_url = '/player/rest/'+region+'/'+summoner_name;
+	console.log(fetch_url+'지역코드');
+	fetch(fetch_url)
 	  .then(function(response) {
 		return response.json()  
 	  })
@@ -68,9 +66,11 @@ function get_player_from_server(){
 		set_player_html();
 		//player_match 조회
 		get_player_match_from_server();
+			
+		
 		
 		//가져온 player 정보를 기반으로 가지고 있는 매치 간략정보 가져오기
-		get_match_player_from_server();
+		get_match_player_from_server();	
 	   })
 	
 }
@@ -92,29 +92,66 @@ function get_player_match_from_server(){
 		  }
 		}).then(res => res.json())
 		.then(
-				response => set_playe_match_list(response)
+				response => set_player_match_list(response)
 		)
 		.catch(error => console.error('Error:', error));
 }
 
-function set_playe_match_list(server_player_match_list){
+function set_player_match_list(server_player_match_list){
 	player_match_list = server_player_match_list;
+	var match_list_div = document.getElementById("match_list");
 	player_match_list.forEach(function(player_match){
-		var match_list_div = document.getElementById("match_list");
 		var player_match_div = set_player_match_html(player_match);
 		match_list_div.appendChild(player_match_div);
 	});
 }
 
+
+
+
+//검색된 유저의 player_match 목록에 대한 내역 html 구성
+//일단 초기화 해서 get_match 가져올 수 있는 사앹로 만들고
+//리스트 작성 이후 match_player 가져와서 있는 내역은 다시 할당해야됨
+/*
+function set_player_match_html(player_match_list){
+	console.log(player_match_list+'anjse[');
+	var player_match_tag = document.getElementById(match_list);
+	player_match_list.forEach(function(player_match){
+		//var player_match_tag = document.getElementById(match_player.matchId);
+		var player_match_div = document.createElement("div");
+		player_match_div.setAttribute('id',player_match.matchId)
+		player_match_div.setAttribute('class','player_match')
+		match_player.matchPlayerChampionList.forEach(function(match_player_champion){
+			var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
+			player_match_div.appendChild(champion_tag);
+		});
+		
+		
+		player_match_tag.appendChild(player_match_div);
+		
+		
+	});
+}
+*/
+
 function set_player_match_html(player_match){
 	var player_match_div = document.createElement("div");
 	player_match_div.setAttribute('id', player_match.matchId);
 	player_match_div.setAttribute('class', 'player_match');
+	player_match_div.appendChild(get_match_button_html(player_match.matchId));
 	return player_match_div;
 }
 
-function get_match_button_html(){
+function get_match_button_html(match_id){
+	var match_button_html = document.createElement("div");
+	match_button_html.setAttribute('class','get_match_button');
+	match_button_html.setAttribute("onclick", "javascript:get_match_from_server('"+match_id+"')");
 	
+	var refresh_button = document.createElement("i");
+	refresh_button.setAttribute('class','fa fa-refresh fa-2x');
+	refresh_button.setAttribute('aria-hidden','true');
+	match_button_html.appendChild(refresh_button);
+	return match_button_html;
 }
 
 
@@ -132,13 +169,18 @@ function get_match_player_from_server(){
 		.catch(error => console.error('Error:', error));
 }
 
+//match 검색했을때 가져온 match_player별 내역 html 
 function set_match_player_html(match_player_list){
 	
 	match_player_list.forEach(function(match_player){
 		
 		var player_match_tag = document.getElementById(match_player.matchId);
-		var match_player_div = document.createElement("div");
 		
+		//매치상세 추가
+		player_match_tag.appendChild(get_match_summary_html(match_player));
+		
+		var match_player_div = document.createElement("div");
+		match_player_div.setAttribute('class','match_player_summary');
 		match_player.matchPlayerChampionList.forEach(function(match_player_champion){
 			var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
 			match_player_div.appendChild(champion_tag);
@@ -149,13 +191,18 @@ function set_match_player_html(match_player_list){
 		});
 		
 		player_match_tag.appendChild(match_player_div);
+		//player_match_tag.insertBefore(get_match_summary_html(match_player), player_match_tag.firstChild);
 		
 	});
 	
 }
 
+
+
+
+
+
 function champion_html(champion, tft_set_number_detail){
-	console.log(champion);
 	var champion_html = document.createElement("div");
 	champion_html.setAttribute('class', 'champion');
 	champion_html.appendChild(champion_star_html(champion.star));
@@ -179,12 +226,11 @@ function champion_star_html(champion_star){
 function champion_img_html(champion, tft_set_number_detail){
 	var champion_img = document.createElement("img");
 	champion_img.setAttribute("src", "/file/sets/"+tft_set_folder_path(tft_set_number_detail)+"/champions/"+champion.championId+".png");
-	champion_img.setAttribute("class",'champion_cost_'+champion.cost);
+	champion_img.setAttribute("class",'champion_cost_'+champion.cost+' champion_img');
 	return champion_img;
 }
 
 function tft_set_folder_path(tft_set_number){
-	console.log(tft_set_number);
 	var tft_set_main = tft_set_number;
 	var tft_set_main_legnth;
 	var half_season_check = '.';
@@ -197,7 +243,6 @@ function tft_set_folder_path(tft_set_number){
 
 	tft_set_main_legnth = String(tft_set_main).length;
 	for(var i=0; i<3-tft_set_main_legnth ;i++){
-		console.log('반복문');
 		tft_set_number = '0'+tft_set_number;
 	}
 	return tft_set_number;
@@ -291,7 +336,7 @@ function get_all_champion_list(){
 }
 
 function get_match_from_server(match_id){
-	var url = '/searchMatch/'+player.region+'/'+match_id;
+	var url = '/match/rest/searchMatch/'+player.region+'/'+match_id;
 	fetch(url, {
 		  headers:{
 		    'Content-Type': 'application/json'
@@ -303,4 +348,105 @@ function get_match_from_server(match_id){
 
 function set_match_html(match){
 	
-} 
+}
+
+function get_match_summary_html(match_player){
+	var match_summary_html = document.createElement("div");
+	match_summary_html.setAttribute("class", 'match_summary');
+	
+	var match_summary_placement_html = get_match_summary_placement_html(match_player.placement);
+	var match_summary_last_round_html = get_match_summary_last_round_html(match_player.lastRound);
+	var match_summary_time_eliminated_html =  get_match_summary_time_eliminated_html(match_player.timeEliminated);
+	var match_summary_damage_to_players_html = get_match_summary_damage_to_players_html(match_player.damageToPlayers);
+	var match_summary_players_eliminated_html = get_match_summary_players_eliminated_html(match_player.playersEliminated);
+	var match_summary_gold_left_html = get_match_summary_gold_left_html(match_player.goldLeft);
+	
+	
+	match_summary_html.appendChild(match_summary_placement_html);
+	match_summary_html.appendChild(match_summary_last_round_html);
+	match_summary_html.appendChild(match_summary_time_eliminated_html);
+	match_summary_html.appendChild(match_summary_damage_to_players_html);
+	match_summary_html.appendChild(match_summary_players_eliminated_html);
+	match_summary_html.appendChild(match_summary_gold_left_html);
+	
+	//match_player.placement
+	//match_player.lastRound
+	//match_player.timeEliminated
+	//match_player.damageToPlayers
+	//match_player.playersEliminated
+	//match_player.goldLeft;
+
+	return match_summary_html;
+}
+
+function get_match_summary_placement_html(placement){
+	var match_summary_placement_html = document.createElement("div");
+	match_summary_placement_html.setAttribute("class", 'match_summary_placement_'+placement);
+	match_summary_placement_html.innerHTML = '등수 '+placement;
+	return match_summary_placement_html;
+}
+
+function get_match_summary_last_round_html(lastRound){
+	var match_summary_lastRound_html = document.createElement("div");
+	match_summary_lastRound_html.setAttribute("class", 'match_summary_last_round');
+	match_summary_lastRound_html.innerHTML = '최종라운드'+round_count(lastRound);
+	return match_summary_lastRound_html;
+}
+
+function round_count(lastRound){
+	var count = 0;
+	var roundIndex = 0;
+	while (count <= lastRound){
+		roundIndex += 1;
+		count += rounds[roundIndex];
+	}
+	//
+	var main_round = roundIndex;
+	var sub_round = lastRound - (count-rounds[roundIndex]);
+	
+	return main_round+'-'+sub_round;
+	
+}
+
+function get_match_summary_time_eliminated_html(timeEliminated){
+	var match_summary_timeEliminated_html = document.createElement("div");
+	match_summary_timeEliminated_html.setAttribute("class", 'match_summary_time_eliminated');
+	match_summary_timeEliminated_html.innerHTML = '종료시간 '+timestamp_to_js_time(timeEliminated);
+	return match_summary_timeEliminated_html;
+	
+	function timestamp_to_js_time(timeEliminated){
+		var minutes = Math.floor(timeEliminated / 60);
+		var seconds = Math.floor(timeEliminated % 60);
+		return minutes +":"+seconds;
+	}
+	
+}
+
+function get_match_summary_damage_to_players_html(damageToPlayers){
+	var match_summary_damageToPlayers_html = document.createElement("div");
+	match_summary_damageToPlayers_html.setAttribute("class", 'match_summary_damage_to_players');
+	match_summary_damageToPlayers_html.innerHTML = '가한 피해량'+damageToPlayers;
+	return match_summary_damageToPlayers_html;
+}
+
+function get_match_summary_players_eliminated_html(playersEliminated){
+	var match_summary_playersEliminated_html = document.createElement("div");
+	match_summary_playersEliminated_html.setAttribute("class", 'match_summary_players_eliminated');
+	match_summary_playersEliminated_html.innerHTML = '탈락시킨 플레이어 수'+playersEliminated;
+	return match_summary_playersEliminated_html;
+}
+
+function get_match_summary_gold_left_html(goldLeft){
+	var match_summary_goldLeft_html = document.createElement("div");
+	match_summary_goldLeft_html.setAttribute("class", 'match_summary_gold_left');
+	match_summary_goldLeft_html.innerHTML = '잔여골드'+goldLeft;
+	return match_summary_goldLeft_html;
+}
+
+/*
+var eElement; // some E DOM instance
+var newFirstElement; //element which should be first in E
+
+eElement.insertBefore(newFirstElement, eElement.firstChild);
+
+*/

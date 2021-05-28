@@ -11,7 +11,6 @@ import com.kihwangkwon.businesslogic.version.domain.GameVersionInfo;
 public class GameVersionServiceImpl implements GameVersionInfoService{
 	
 	private GameVersionInfoRepository gameVersionInfoRepository;
-	private String[] results;
 	
 	@Autowired
 	public GameVersionServiceImpl (GameVersionInfoRepository gameVersionInfoRepository) {

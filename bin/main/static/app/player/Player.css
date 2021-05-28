@@ -1,11 +1,5 @@
 #body_wrap{
-	background-color: orange;
 	text-align:center;
-	
-	/*
-	align-items: center;
-	justify-content: center;
-	*/
 }
 
 #player_search_section{
@@ -38,33 +32,87 @@
 }
 #search{
 	height: 44px;
+	/*
 	background-color: white;
+	*/
 }
 
 #player_icon{
 	width: 128px;
 }
+
+.player_match{
+	min-height: 20px;
+}
+
+.get_match_button{
+	display: inline-block;
+}
+.match_summary{
+	display: inline-block;
+}
+.match_player_summary{
+	display: inline-block;
+}
+
+.champions{
+	
+}
+
 .champion{
 	display: inline-block;
 	width: 64px;
 	padding: 2px;
 }
+
 .champion_star{
 	text-align: center;
 }
-
+.champion_img{
+	width: 100%;
+	height: auto;
+}
 .champion_items{
 	width: 100%;
 	text-align: center;
 }
+
 .item_img{
 	width: 25%
 }
+
 .empty_item_img{
 	height: 16px;
 }
 
-.player_match{
-	min-height: 20px;
-	background-color: green;
+.traits{
+	
+}
+
+.trait{
+	
+}
+.match_summary_placement_1{
+	color: #4fda7d;
+}
+.match_summary_placement_2{
+	color: #4f97da;
+}
+.match_summary_placement_3{
+	color: #4f97da;
+}
+.match_summary_placement_4{
+	color: #4f97da;
+}
+.match_summary_placement_5{
+	color: #b5b5b5;	
+}
+.match_summary_placement_6{
+	color: #b5b5b5;	
+}
+.match_summary_placement_7{
+	color: #b5b5b5;	
+}
+.match_summary_placement_8{
+	color: #b5b5b5;	
 }

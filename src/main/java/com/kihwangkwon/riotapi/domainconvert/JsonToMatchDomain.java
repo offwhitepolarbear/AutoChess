@@ -86,7 +86,7 @@ public class JsonToMatchDomain {
 		final int lastRound = objectToInt(map.get("last_round"));
 		final int level = objectToInt(map.get("level"));
 		final int placement = objectToInt(map.get("placement"));
-		final int damegeToPlayers = objectToInt(map.get("total_damage_to_players"));
+		final int damageToPlayers = objectToInt(map.get("total_damage_to_players"));
 		final int playersEliminated = objectToInt(map.get("players_eliminated"));
 		final double timeEliminated = ((BigDecimal)map.get("time_eliminated")).doubleValue();
 		
@@ -103,7 +103,7 @@ public class JsonToMatchDomain {
 				.lastRound(lastRound)
 				.level(level)
 				.placement(placement)
-				.damegeToPlayers(damegeToPlayers)
+				.damageToPlayers(damageToPlayers)
 				.playersEliminated(playersEliminated)
 				.placement(placement)
 				.timeEliminated(timeEliminated)
