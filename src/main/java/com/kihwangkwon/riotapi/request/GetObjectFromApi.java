@@ -55,9 +55,7 @@ public class GetObjectFromApi {
 	public Player getPlayer(Player player, RegionNation nation, String name){
 		//db에 플레이어 있는경우 id 할당하고 api에서 가져옴
 		if(player!=null) {
-			Long id = player.getId();
-			player = getPlayer(nation, name);
-			player.setId(id);
+			player = playerUpdate(player,getPlayer(nation, name));
 		}
 		//db에 플레이어 없는경우
 		else {
@@ -65,6 +63,31 @@ public class GetObjectFromApi {
 		}
 		return player;
 	}
+	
+	private Player playerUpdate(Player dbPlayer, Player apiPlayer) {
+		dbPlayer.setSummonerId(apiPlayer.getSummonerId());
+		dbPlayer.setPuuid(apiPlayer.getPuuid());
+		dbPlayer.setAccountId(apiPlayer.getAccountId());
+		dbPlayer.setName(apiPlayer.getName());
+		dbPlayer.setRegion(apiPlayer.getRegion());
+		dbPlayer.setProfileIconId(apiPlayer.getProfileIconId());
+		dbPlayer.setRevisionDate(apiPlayer.getRevisionDate());
+		dbPlayer.setSummonerLevel(apiPlayer.getSummonerLevel());
+		dbPlayer.setLastRequest(apiPlayer.getLastRequest());
+		dbPlayer.setLeagueId(apiPlayer.getLeagueId());
+		dbPlayer.setQueueType(apiPlayer.getQueueType());
+		dbPlayer.setTier(apiPlayer.getTier());
+		dbPlayer.setRank(apiPlayer.getRank());
+		dbPlayer.setLeaguePoints(apiPlayer.getLeaguePoints());
+		dbPlayer.setWins(apiPlayer.getWins());
+		dbPlayer.setLosses(apiPlayer.getLosses());
+		dbPlayer.setVeteran(apiPlayer.isVeteran());
+		dbPlayer.setInactive(apiPlayer.isInactive());
+		dbPlayer.setFreshBlood(apiPlayer.isFreshBlood());
+		dbPlayer.setHotStreak(apiPlayer.isHotStreak());
+		return dbPlayer;
+	}
+	
 	
 	public Player getPlayer(RegionNation nation, String name){
 		String apiResponse = riotApiRequester.getSummonerByName(nation, name);

@@ -52,7 +52,15 @@
 	display: inline-block;
 }
 .match_player_summary{
+	/*
 	display: inline-block;
+	*/
+}
+.match{
+	width:80%;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black; 
 }
 
 .champions{

@@ -2,7 +2,7 @@ var all_item_map;
 var all_champion_list;
 var player;
 var player_match_list;
-var match_list;
+var match_list = new Map();
 var rounds;
 get_all_item_list();
 get_all_round_list();
@@ -46,12 +46,9 @@ function get_player_from_server(){
 	
 	var summoner_name = document.getElementById('summoner_name').value;
 	
-	console.log(region+'지역코드');
-	
 	// 공백제거 라이엇 정책 공백 없어도 검색되게 되어있음
 	summoner_name = summoner_name.replace(/(\s*)/g, "");
 	var fetch_url = '/player/rest/'+region+'/'+summoner_name;
-	console.log(fetch_url+'지역코드');
 	fetch(fetch_url)
 	  .then(function(response) {
 		return response.json()  
@@ -65,9 +62,9 @@ function get_player_from_server(){
 		//player 정보 html에 적용
 		set_player_html();
 		//player_match 조회
+		console.log(player);
+		console.log(result);
 		get_player_match_from_server();
-			
-		
 		
 		//가져온 player 정보를 기반으로 가지고 있는 매치 간략정보 가져오기
 		get_match_player_from_server();	
@@ -106,34 +103,6 @@ function set_player_match_list(server_player_match_list){
 	});
 }
 
-
-
-
-//검색된 유저의 player_match 목록에 대한 내역 html 구성
-//일단 초기화 해서 get_match 가져올 수 있는 사앹로 만들고
-//리스트 작성 이후 match_player 가져와서 있는 내역은 다시 할당해야됨
-/*
-function set_player_match_html(player_match_list){
-	console.log(player_match_list+'anjse[');
-	var player_match_tag = document.getElementById(match_list);
-	player_match_list.forEach(function(player_match){
-		//var player_match_tag = document.getElementById(match_player.matchId);
-		var player_match_div = document.createElement("div");
-		player_match_div.setAttribute('id',player_match.matchId)
-		player_match_div.setAttribute('class','player_match')
-		match_player.matchPlayerChampionList.forEach(function(match_player_champion){
-			var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
-			player_match_div.appendChild(champion_tag);
-		});
-		
-		
-		player_match_tag.appendChild(player_match_div);
-		
-		
-	});
-}
-*/
-
 function set_player_match_html(player_match){
 	var player_match_div = document.createElement("div");
 	player_match_div.setAttribute('id', player_match.matchId);
@@ -145,7 +114,7 @@ function set_player_match_html(player_match){
 function get_match_button_html(match_id){
 	var match_button_html = document.createElement("div");
 	match_button_html.setAttribute('class','get_match_button');
-	match_button_html.setAttribute("onclick", "javascript:get_match_from_server('"+match_id+"')");
+	match_button_html.setAttribute("onclick", "javascript:get_match('"+match_id+"')");
 	
 	var refresh_button = document.createElement("i");
 	refresh_button.setAttribute('class','fa fa-refresh fa-2x');
@@ -153,7 +122,6 @@ function get_match_button_html(match_id){
 	match_button_html.appendChild(refresh_button);
 	return match_button_html;
 }
-
 
 function get_match_player_from_server(){
 	var url = "/match/rest/matchPlayerList/"+player.puuid;
@@ -173,34 +141,32 @@ function get_match_player_from_server(){
 function set_match_player_html(match_player_list){
 	
 	match_player_list.forEach(function(match_player){
-		
-		var player_match_tag = document.getElementById(match_player.matchId);
-		
-		//매치상세 추가
-		player_match_tag.appendChild(get_match_summary_html(match_player));
-		
-		var match_player_div = document.createElement("div");
-		match_player_div.setAttribute('class','match_player_summary');
-		match_player.matchPlayerChampionList.forEach(function(match_player_champion){
-			var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
-			match_player_div.appendChild(champion_tag);
-		});
-		
-		match_player.matchPlayerTraitList.forEach(function(match_player_trait){
-			
-		});
-		
-		player_match_tag.appendChild(match_player_div);
-		//player_match_tag.insertBefore(get_match_summary_html(match_player), player_match_tag.firstChild);
-		
+		set_match_player_each_html(match_player)	
 	});
 	
 }
 
-
-
-
-
+function set_match_player_each_html(match_player){
+	var player_match_tag = document.getElementById(match_player.matchId);
+	
+	//매치상세 추가
+	player_match_tag.appendChild(get_match_summary_html(match_player));
+	
+	var match_player_div = document.createElement("div");
+	match_player_div.setAttribute('class','match_player_summary');
+	match_player.matchPlayerChampionList.forEach(function(match_player_champion){
+		var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
+		match_player_div.appendChild(champion_tag);
+	});
+	
+	match_player.matchPlayerTraitList.forEach(function(match_player_trait){
+		
+	});
+	
+	player_match_tag.appendChild(match_player_div);
+	//player_match_tag.insertBefore(get_match_summary_html(match_player), player_match_tag.firstChild);
+	
+}
 
 function champion_html(champion, tft_set_number_detail){
 	var champion_html = document.createElement("div");
@@ -277,23 +243,6 @@ function items_img_html(champion, tft_set_number_detail){
 
 }
 
-function get_match_from_server(match_id_list){
-	var url = '/match/rest/matchList/matchIds';
-	var data = match_id_list;
-	fetch(url, {
-	  method: 'POST', // or 'PUT'
-	  body: JSON.stringify(data), // data can be `string` or {object}!
-	  headers:{
-	    'Content-Type': 'application/json'
-	  }
-	}).then(res => res.json())
-	.then(response => console.log('Success:', JSON.stringify(response)))
-	.catch(error => console.error('Error:', error));
-}
-function set_match_html(){
-	
-}
-
 function fill_match_list(match_info){
 	
 	var match_list_div = document.getElementById("match_list");
@@ -335,19 +284,47 @@ function get_all_champion_list(){
 	
 }
 
+function get_match(match_id){
+	var match = match_list[match_id];
+	//없는경우 서버에서 가져오고
+	if(match==undefined){
+		match = get_match_from_server(match_id);
+	}
+	//있는 경우엔 여기서 html 처리만
+	else{
+		set_match_html(match);
+	}
+}
+
+//매치 있는 경우 => 이미 처리를 한번 했음 
+
+
+
+
+
 function get_match_from_server(match_id){
 	var url = '/match/rest/searchMatch/'+player.region+'/'+match_id;
 	fetch(url, {
 		  headers:{
 		    'Content-Type': 'application/json'
 		  }
-		}).then(res => res.json())
-		.then(response => set_match_html(response))
+		})
+		.then(res => res.json())
+		.then(match => set_match_info(match))
 		.catch(error => console.error('Error:', error));
+	
+	function set_match_info(match){
+		match_list[match.matchId] = match;
+		set_match_html(match);
+	}
 }
 
 function set_match_html(match){
-	
+	var target_html =  document.getElementById(match.matchId);
+	//get_match_html(match);
+	//개인 기록 먼저 할당하고...
+	var match_html = get_match_html(match);
+	target_html.appendChild(match_html);
 }
 
 function get_match_summary_html(match_player){
@@ -368,13 +345,6 @@ function get_match_summary_html(match_player){
 	match_summary_html.appendChild(match_summary_damage_to_players_html);
 	match_summary_html.appendChild(match_summary_players_eliminated_html);
 	match_summary_html.appendChild(match_summary_gold_left_html);
-	
-	//match_player.placement
-	//match_player.lastRound
-	//match_player.timeEliminated
-	//match_player.damageToPlayers
-	//match_player.playersEliminated
-	//match_player.goldLeft;
 
 	return match_summary_html;
 }
@@ -443,6 +413,39 @@ function get_match_summary_gold_left_html(goldLeft){
 	return match_summary_goldLeft_html;
 }
 
+
+function get_match_html(match){
+	var match_html = document.createElement("div");
+	match_html.setAttribute('class','match');
+	match_html.setAttribute('value', match.matchId);
+	match.matchPlayerList.forEach(function(match_player){
+		var match_player_html = get_match_player_html(match_player);
+		match_html.appendChild(match_player_html);
+	});
+	
+	return match_html;
+}
+
+
+function get_match_player_html(match_player){
+
+	var match_player_div = document.createElement("div");
+	match_player_div.setAttribute('class','match_player_summary');
+
+	var match_summary_html = get_match_summary_html(match_player);
+	match_player_div.appendChild(match_summary_html);
+	
+	match_player.matchPlayerChampionList.forEach(function(match_player_champion){
+		var champion_tag = champion_html(match_player_champion, match_player.tftSetNumberDetail);
+		match_player_div.appendChild(champion_tag);
+	});
+	
+	match_player.matchPlayerTraitList.forEach(function(match_player_trait){
+		
+	});
+	
+	return match_player_div;
+}
 /*
 var eElement; // some E DOM instance
 var newFirstElement; //element which should be first in E

@@ -3,6 +3,7 @@ package com.kihwangkwon.businesslogic.player.service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.criteria.Order;
 
@@ -37,13 +38,27 @@ public class PlayerServiceImpl implements PlayerService {
 	
 	@Override
 	public Player getPlayerByName(RegionNation region, String playerName) {
-		
-		Player player = playerRepository.findByRegionAndName(region.toString(), playerName);
-		
+		//db에 입력된 이름이랑 검색창에 입력한 이름이랑 동일하지 않은데 서버에서 같게 가져오는 경우 duplicate 문제 발생
+		//(name은 다른걸로 인식해서 입려갛려고 하는데 실제로는 같은 아이디라 puuid가 중복됨) 
+		//Player player = playerRepository.findByRegionAndName(region.toString(), playerName);
+		/*
+		if(player !=null) {
+			Long playerId = player.getId();
+			Optional<Player> idPlayer =playerRepository.findById(playerId);
+			if(idPlayer.isPresent()) {
+				player = idPlayer.get();
+			}
+		}
+		*/
+		Player player = null;
 		player = getObjectFromApi.getPlayer(player, region, playerName);
 
 		//정상적으로 검색이되서 player값이 리턴된 경우에만 db에 저장 후 playerMatch 저장
 		if(player!=null) {
+			Player dbPlayer = playerRepository.findByRegionAndName(region.toString(), player.getName());
+			if(dbPlayer!=null) {
+				player.setId(dbPlayer.getId());
+			}
 			player = playerRepository.save(player);
 			updatePlayerMatchList(region, player.getPuuid());
 		}
