@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kihwangkwon.common.StaticJsonParsing;
-import com.kihwangkwon.domain.db.Champion;
 import com.kihwangkwon.staticdata.champion.domain.StaticChampion;
 
 @Service

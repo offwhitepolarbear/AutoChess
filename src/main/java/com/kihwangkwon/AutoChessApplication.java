@@ -2,13 +2,10 @@ package com.kihwangkwon;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class AutoChessApplication {
-	
 
-		
 	public static void main(String[] args) {
 		String propertiesLocation = getPropertiesLocation();
 		

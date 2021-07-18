@@ -45,7 +45,7 @@ public class Match {
 	
 	@OneToMany
 	@Cascade(CascadeType.ALL)
-	@OrderBy("placement ASC")
+	@OrderBy("placement")
 	@JoinColumn(name="matchInfoId", referencedColumnName = "id")	
 	List<MatchPlayer> matchPlayerList;
 

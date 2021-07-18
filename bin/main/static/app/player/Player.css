@@ -37,6 +37,14 @@
 	*/
 }
 
+
+.display_hide{
+	display: none;
+}
+.inline_block{
+	display: inline-block;
+}
+
 #player_icon{
 	width: 128px;
 }
@@ -52,9 +60,9 @@
 	display: inline-block;
 }
 .match_player_summary{
-	/*
+
 	display: inline-block;
-	*/
+	
 }
 .match{
 	width:80%;
@@ -100,6 +108,7 @@
 .trait{
 	
 }
+
 .match_summary_placement_1{
 	color: #4fda7d;
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kihwangkwon.common.GetDataFromExternalApi;
-import com.kihwangkwon.domain.db.Champion;
 import com.kihwangkwon.properties.ClassPathProperties;
 import com.kihwangkwon.properties.ConstructorProperties;
 
@@ -25,9 +24,4 @@ public class ChampionControllerRest {
 	@Autowired
 	GetDataFromExternalApi getDataFromExternalApi;
 	
-	@RequestMapping("/champions/{championName}")
-	public List<Champion> championList(@PathVariable("championName") String championName) {
-		
-		return null;
-	}
 }
